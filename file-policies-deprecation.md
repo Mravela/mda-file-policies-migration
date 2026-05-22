@@ -49,7 +49,7 @@ Migration follows a simple three-step process:
 
 Before you recreate your policies in Microsoft Purview, confirm the following:
 
-- You have the **Compliance Administrator** or **DLP Compliance Management** role in Microsoft Purview.
+- You have the required Microsoft Purview roles to create and manage DLP and auto-labeling policies. For the complete set of required roles, see [Permissions for DLP policies](https://learn.microsoft.com/en-us/purview/dlp-create-deploy-policy#permissions) and [Permissions for sensitivity labels](https://learn.microsoft.com/en-us/purview/get-started-with-sensitivity-labels#permissions-required-to-create-and-manage-sensitivity-labels).
 - Sensitivity labels are created and published in Microsoft Purview Information Protection (required for label-based conditions and auto-labeling policies).
 - Auditing is enabled in your Microsoft 365 tenant (required for Activity Explorer and DLP reporting).
 - You've exported or documented your existing MDA file policies, including their conditions, actions, and scoped apps.
@@ -64,22 +64,22 @@ Use the following steps to recreate MDA file policies that detect sensitive cont
 1. Choose a compliance template (such as GDPR or HIPAA) or select **Custom policy**.
 1. Enter a name and description for the policy.
 1. Optionally, assign admin units to scope policy management access.
-1. Select the workloads: **SharePoint Online**, **OneDrive for Business**, or both. Exclude other workloads if they're not needed.
+1. Select the workloads: **SharePoint Online**, **OneDrive for Business**, **Enterprise applications & devices**, or a combination. Exclude other workloads if they're not needed.
 1. Define the policy scope (all users, specific sites, or specific groups).
 1. Create a rule and configure conditions:
    - Choose **Sensitive information types**, **Sensitivity labels**, or both as content conditions.
    - Add **Content is shared externally** if the policy should trigger on external sharing.
-1. Configure actions such as **Block external sharing**, **Restrict access**, or **Allow with warning**.
+1. Configure actions. For SharePoint and OneDrive, available actions include **Restrict access or encrypt the content in Microsoft 365 locations** (block everyone, or block only people outside your organization), **Allow with override**, and **Audit only**. For the complete list of supported actions, see [Supported actions – SharePoint](https://learn.microsoft.com/en-us/purview/dlp-policy-reference#supported-actions-sharepoint) and [Create a DLP policy for SharePoint and OneDrive](https://learn.microsoft.com/en-us/purview/dlp-create-policy-spo-odb-external#steps-to-create-policy).
 1. Configure **User notifications** (policy tips) and **Incident reports** with alert recipients and severity.
 1. Select **Simulation mode** to test the policy before enforcing it.
 1. Review matched results in **Activity explorer**, then set the policy to **On** when ready.
 
 > [!TIP]
-> Run the policy in simulation mode for at least one to two weeks. Review matches in **Data loss prevention** > **Activity explorer** before switching to enforce mode to minimize false positives.
+> Run the policy in simulation mode for at least one to two weeks before switching to enforce mode to minimize false positives. To access and interpret simulation results, see [Simulation results](https://learn.microsoft.com/en-us/purview/dlp-simulation-mode-learn#simulation-results).
 
-### Upgrade or apply sensitivity labels with an auto-labeling policy
+### Replace or apply sensitivity labels with an auto-labeling policy
 
-Use auto-labeling policies to recreate MDA file policies that applied or upgraded sensitivity labels on files at rest.
+Use auto-labeling policies to recreate MDA file policies that applied or replaced sensitivity labels on files at rest.
 
 > [!NOTE]
 > Sensitivity labels must be created and published before you create an auto-labeling policy.
@@ -91,12 +91,15 @@ Use auto-labeling policies to recreate MDA file policies that applied or upgrade
 1. Select the sensitivity label to apply.
 1. Optionally, assign admin units.
 1. Select locations: **SharePoint Online**, **OneDrive for Business**, or both.
-1. Configure rules and conditions (for example, content contains a specific sensitive information type or existing label).
+1. Configure rules and conditions (for example, content contains a specific sensitive information type). Note that **existing label** is not a supported condition in Purview auto-labeling policies.
 1. Under **Additional label settings**, configure whether the policy should override existing labels:
    - Select **Override** to replace lower-priority labels regardless of whether the previous label was applied manually or automatically.
    - Override applies to Exchange, SharePoint, and OneDrive only.
    - If the label includes encryption settings, enter an admin account as the Rights Management owner.
 1. Run the policy in **Simulation mode**, review the items matched, then turn on the policy.
+
+> [!NOTE]
+> For detailed guidance on configuring auto-labeling policies for SharePoint and OneDrive, see [How to configure auto-labeling policies for SharePoint, OneDrive, and Exchange](https://learn.microsoft.com/en-us/purview/apply-sensitivity-label-automatically?tabs=remove-label#how-to-configure-auto-labeling-policies-for-sharepoint-onedrive-and-exchange).
 
 **To auto-remove labels:**
 
